@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Safelink</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); font-family: 'Poppins', sans-serif; }
+        .card { width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; }
+        h2 { color: #2d3436; margin-bottom: 20px; }
+        input { width: 100%; box-sizing: border-box; padding: 15px; border: 2px solid #dfe6e9; border-radius: 12px; margin-bottom: 15px; font-family: 'Poppins'; outline: none; transition: 0.3s;}
+        input:focus { border-color: #0984e3; }
+        button { background: #0984e3; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Poppins'; }
+        button:hover { background: #076aba; }
+        .result { margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 12px; display: none; word-break: break-all; font-weight: 500; color: #0984e3; border: 1px dashed #0984e3; }
+        .result a { text-decoration: none; color: #0984e3; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Buat Safelink</h2>
+    <input type="url" id="longUrl" placeholder="Masukkan Link Asli (https://...)" required>
+    <button id="btnCreate" onclick="generateLink()">Buat Link Pendek</button>
+    <div class="result" id="resultBox"></div>
+</div>
+
+<script>
+    async function generateLink() {
+        const url = document.getElementById('longUrl').value;
+        const btn = document.getElementById('btnCreate');
+        const resBox = document.getElementById('resultBox');
+
+        if(!url) return alert('Isi URL dulu bang!');
+        
+        btn.innerText = "Membuat...";
+        btn.disabled = true;
+
+        try {
+            const req = await fetch('/api/create', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ target_url: url })
+            });
+            const data = await req.json();
+
+            if(data.success) {
+                resBox.style.display = 'block';
+                resBox.innerHTML = `Sukses!<br><br><a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+                document.getElementById('longUrl').value = '';
+            } else {
+                alert(data.error);
+            }
+        } catch (e) {
+            alert('Gagal buat link. Pastikan KV udah di-binding.');
+        }
+
+        btn.innerText = "Buat Link Pendek";
+        btn.disabled = false;
+    }
+</script>
+</body>
+</html>
