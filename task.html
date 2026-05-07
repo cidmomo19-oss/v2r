@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="googlebot" content="noindex, nofollow">
+    <title>Buka Kunci URL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { -webkit-tap-highlight-color: transparent !important; outline: none !important; }
+        body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; -webkit-user-select: none; user-select: none; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); font-family: 'Poppins', sans-serif; }
+        .s4u-card { width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); padding: 40px 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid rgba(255,255,255,0.8); backdrop-filter: blur(10px); animation: slideUpFade 0.5s ease-out forwards; }
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        .s4u-header-icon { display: inline-flex; justify-content: center; align-items: center; width: 80px; height: 80px; background: linear-gradient(135deg, #FFF0E6, #FFE0CC); border-radius: 50%; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(255, 126, 95, 0.2); }
+        .s4u-header-icon svg { width: 40px; height: 40px; fill: #FF7E5F; }
+        h2 { margin: 0 0 10px 0; color: #2d3436; font-size: 24px; font-weight: 700; cursor: default; }
+        p.subtitle { color: #636e72; font-size: 14px; margin-bottom: 30px; line-height: 1.6; font-weight: 500; cursor: default; }
+        p.subtitle b { color: #FF7E5F; }
+        .task-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 35px; }
+        .btn-task { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #FF7E5F, #FEB47B); color: white; padding: 16px 22px; border-radius: 14px; font-weight: 600; font-size: 15px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; border: none; width: 100%; font-family: inherit; box-shadow: 0 8px 20px rgba(255, 126, 95, 0.3); }
+        .btn-task:hover:not(.checking) { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 126, 95, 0.5); }
+        .btn-task svg { width: 24px; height: 24px; fill: white; flex-shrink: 0; }
+        .btn-task.checking { background: #f39c12; box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3); pointer-events: none; }
+        .btn-task.failed { background: #ff4757; box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3); animation: shake 0.4s ease-in-out; pointer-events: none; }
+        .btn-task.success { background: linear-gradient(135deg, #00b09b, #96c93d) !important; pointer-events: none; box-shadow: 0 8px 20px rgba(0, 176, 155, 0.3); }
+        .btn-unlock { background: #dfe6e9; color: #b2bec3; width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: not-allowed; transition: all 0.4s ease; font-family: inherit; }
+        .btn-unlock.active { background: #0984e3; color: white; cursor: pointer; box-shadow: 0 8px 20px rgba(9, 132, 227, 0.4); animation: pulseBtn 2s infinite; }
+        @keyframes pulseBtn { 0% { box-shadow: 0 0 0 0 rgba(9, 132, 227, 0.4); } 70% { box-shadow: 0 0 0 12px rgba(9, 132, 227, 0); } 100% { box-shadow: 0 0 0 0 rgba(9, 132, 227, 0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .icon-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="s4u-card" id="page-task" style="display: none;">
+    <div class="s4u-header-icon"><svg viewBox="0 0 24 24"><path d="M20,3H4v10c0,2.21,1.79,4,4,4h6c2.21,0,4-1.79,4-4v-3h2c1.11,0,2-0.9,2-2V5C22,3.9,21.11,3,20,3z M20,8h-2V5h2V8z M4,19h16v2H4V19z"/></svg></div>
+    <h2>Bantu admin beli jajan ☕</h2>
+    <p class="subtitle">Klik tombol di bawah, tab baru akan terbuka. Anteng disana selama <b>5 detik</b>, lalu kembali ke halaman ini.</p>
+
+    <div class="task-list">
+        <button class="btn-task" id="btnTask" onclick="startTask()">
+            <span id="textTask">Klik disini (Wajib 5 Detik)</span>
+            <svg id="iconTask" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </button>
+    </div>
+
+    <button class="btn-unlock" id="btnUnlock" onclick="unlockTarget()" disabled>Dapatkan Link Asli</button>
+</div>
+
+<script>
+    // Nangkep ID KODE dari URL Parameter (?id=ABCDEF)
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('id');
+    
+    if (!sessionId || navigator.webdriver) {
+        window.location.replace('/'); // Balikin ke index kalo gak ada kode
+    } else {
+        document.getElementById('page-task').style.display = 'block';
+    }
+
+    // URL TARGET Iklan Silangan (Base64 Encoded)
+    const _t1 = "aHR0cHM6Ly9jb25kdWN0aXZlYnJlZWRzLmNvbS9ibWF5ZTIyN2ppP2tleT0yMTE0M2Y2MzUyZWRmNjVhNmI2NDYxNWU5YmIzN2JiOQ==";
+    const _t2 = "aHR0cHM6Ly9vbWcxMC5jb20vNC8xMDM5MDg2MA==";
+
+    const btnTask = document.getElementById('btnTask');
+    const textTask = document.getElementById('textTask');
+    const iconTask = document.getElementById('iconTask');
+    const btnUnlock = document.getElementById('btnUnlock');
+
+    window.addEventListener("pageshow", () => {
+        if (sessionStorage.getItem('taskDone') === 'true') {
+            setTaskSuccess();
+        } else if (localStorage.getItem('isProcessingTask') === 'true') {
+            checkTaskStatus();
+        }
+    });
+
+    function startTask() {
+        if(localStorage.getItem('isProcessingTask') === 'true') return; 
+
+        const newTab = window.open('about:blank', '_blank');
+        if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+            alert("⚠️ POP-UP DIBLOKIR!\nSistem mendeteksi pemblokir pop-up aktif di browser Anda. Izinkan pop-up untuk melanjutkan.");
+            return;
+        }
+
+        let seq = parseInt(localStorage.getItem('taskSeq') || 0);
+        let adIndex = seq % 2;
+        
+        sessionStorage.setItem('lastAdUsed', adIndex);
+        localStorage.setItem('taskSeq', seq + 1);
+        
+        let dest = (adIndex === 0) ? atob(_t1) : atob(_t2);
+
+        const redirectHTML = `
+            <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Memuat...</title><style>body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #fff; margin:0;} .loader { border: 3px solid #f3f3f3; border-top: 3px solid #FF7E5F; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></head><body><div class="loader"></div><script>setTimeout(function() { window.location.replace("${dest}"); }, 800);<\/script></body></html>
+        `;
+        newTab.document.write(redirectHTML);
+        newTab.document.close();
+
+        localStorage.setItem('taskStart', Date.now());
+        localStorage.setItem('isProcessingTask', 'true');
+
+        btnTask.className = 'btn-task checking';
+        textTask.innerText = "Menunggu kamu kembali...";
+        iconTask.classList.add('icon-spin');
+        iconTask.innerHTML = '<path d="M12 4V2C6.48 2 2 6.48 2 12h2c0-4.41 3.59-8 8-8z"/>';
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'visible') {
+            checkTaskStatus();
+        }
+    });
+
+    function checkTaskStatus() {
+        if (localStorage.getItem('isProcessingTask') !== 'true') return;
+
+        let startTime = parseInt(localStorage.getItem('taskStart') || 0);
+        let timeSpent = Date.now() - startTime;
+        
+        localStorage.removeItem('isProcessingTask'); 
+        iconTask.classList.remove('icon-spin');
+
+        if (timeSpent < 5000) {
+            btnTask.className = 'btn-task failed';
+            textTask.innerText = "Yah belum 5 detik, diulang yuk!";
+            iconTask.innerHTML = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>';
+            
+            setTimeout(() => {
+                btnTask.className = 'btn-task';
+                textTask.innerText = "Klik disini (Wajib 5 Detik)";
+                iconTask.innerHTML = '<path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>';
+            }, 3000);
+        } else {
+            setTaskSuccess();
+        }
+    }
+
+    function setTaskSuccess() {
+        btnTask.className = 'btn-task success';
+        textTask.innerText = "Terima kasih banyak! ☕";
+        iconTask.innerHTML = '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>';
+        
+        btnUnlock.disabled = false;
+        btnUnlock.classList.add('active');
+        sessionStorage.setItem('taskDone', 'true');
+    }
+
+    async function unlockTarget() {
+        const realLinkTab = window.open('about:blank', '_blank');
+        if (!realLinkTab || realLinkTab.closed || typeof realLinkTab.closed === 'undefined') {
+            alert("⚠️ POP-UP DIBLOKIR!\nSistem mendeteksi pemblokir pop-up aktif. Izinkan pop-up untuk membuka link asli.");
+            return;
+        }
+
+        btnUnlock.innerText = "Membuka...";
+        btnUnlock.disabled = true;
+
+        try {
+            // Minta Link asli ke Worker dari Endpoint API
+            const res = await fetch(`/api/get/${sessionId}?t=${new Date().getTime()}`);
+            if (res.ok) {
+                const data = await res.json();
+                
+                const lastAd = sessionStorage.getItem('lastAdUsed');
+                let unlockAdDest = (lastAd === "0") ? atob(_t2) : atob(_t1);
+
+                sessionStorage.clear(); 
+                
+                // Buka Link Asli
+                realLinkTab.location.replace(data.url);
+                // Redirect halaman ini ke iklan 
+                window.location.replace(unlockAdDest);
+                
+            } else {
+                realLinkTab.close(); 
+                alert("Sesi link kadaluarsa atau tidak valid.");
+                window.location.replace('/');
+            }
+        } catch (err) {
+            realLinkTab.close(); 
+            alert("Gagal memuat link. Periksa koneksi internetmu.");
+            btnUnlock.innerText = "Dapatkan Link Asli";
+            btnUnlock.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
