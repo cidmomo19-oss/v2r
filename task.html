@@ -7,8 +7,17 @@
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="googlebot" content="noindex, nofollow">
     <title>Buka Kunci URL</title>
+    
+    <!-- OPTIMASI KECEPATAN IKLAN: Nyambung ke server iklan lebih awal -->
+    <link rel="preconnect" href="https://conductivebreeds.com" crossorigin>
+    <link rel="dns-prefetch" href="https://conductivebreeds.com">
+    <link rel="preconnect" href="https://omg10.com" crossorigin>
+    <link rel="dns-prefetch" href="https://omg10.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* DESAIN 100% TIDAK DIUBAH */
         * { -webkit-tap-highlight-color: transparent !important; outline: none !important; }
         body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; -webkit-user-select: none; user-select: none; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); font-family: 'Poppins', sans-serif; }
         .s4u-card { width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); padding: 40px 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border: 1px solid rgba(255,255,255,0.8); backdrop-filter: blur(10px); animation: slideUpFade 0.5s ease-out forwards; }
@@ -51,17 +60,15 @@
 </div>
 
 <script>
-    // Nangkep ID KODE dari URL Parameter (?id=ABCDEF)
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('id');
     
     if (!sessionId || navigator.webdriver) {
-        window.location.replace('/'); // Balikin ke index kalo gak ada kode
+        window.location.replace('/'); 
     } else {
         document.getElementById('page-task').style.display = 'block';
     }
 
-    // URL TARGET Iklan Silangan (Base64 Encoded)
     const _t1 = "aHR0cHM6Ly9jb25kdWN0aXZlYnJlZWRzLmNvbS9ibWF5ZTIyN2ppP2tleT0yMTE0M2Y2MzUyZWRmNjVhNmI2NDYxNWU5YmIzN2JiOQ==";
     const _t2 = "aHR0cHM6Ly9vbWcxMC5jb20vNC8xMDM5MDg2MA==";
 
@@ -81,7 +88,8 @@
     function startTask() {
         if(localStorage.getItem('isProcessingTask') === 'true') return; 
 
-        const newTab = window.open('about:blank', '_blank');
+        // OPTIMASI: Tambah noopener,noreferrer biar aman 100% dari tracking Network Iklan
+        const newTab = window.open('about:blank', '_blank', 'noopener,noreferrer');
         if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
             alert("⚠️ POP-UP DIBLOKIR!\nSistem mendeteksi pemblokir pop-up aktif di browser Anda. Izinkan pop-up untuk melanjutkan.");
             return;
@@ -95,8 +103,16 @@
         
         let dest = (adIndex === 0) ? atob(_t1) : atob(_t2);
 
+        // OPTIMASI SPEED: Hapus setTimeout, langsung tembak meta refresh + replace (0 detik)
         const redirectHTML = `
-            <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Memuat...</title><style>body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #fff; margin:0;} .loader { border: 3px solid #f3f3f3; border-top: 3px solid #FF7E5F; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></head><body><div class="loader"></div><script>setTimeout(function() { window.location.replace("${dest}"); }, 800);<\/script></body></html>
+            <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="referrer" content="no-referrer">
+            <meta http-equiv="refresh" content="0;url=${dest}">
+            <title>Memuat...</title>
+            <style>body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #fff; margin:0;} .loader { border: 3px solid #f3f3f3; border-top: 3px solid #FF7E5F; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+            </head><body><div class="loader"></div>
+            <script>window.location.replace("${dest}");<\/script>
+            </body></html>
         `;
         newTab.document.write(redirectHTML);
         newTab.document.close();
@@ -151,7 +167,7 @@
     }
 
     async function unlockTarget() {
-        const realLinkTab = window.open('about:blank', '_blank');
+        const realLinkTab = window.open('about:blank', '_blank', 'noopener,noreferrer');
         if (!realLinkTab || realLinkTab.closed || typeof realLinkTab.closed === 'undefined') {
             alert("⚠️ POP-UP DIBLOKIR!\nSistem mendeteksi pemblokir pop-up aktif. Izinkan pop-up untuk membuka link asli.");
             return;
@@ -161,7 +177,6 @@
         btnUnlock.disabled = true;
 
         try {
-            // Minta Link asli ke Worker dari Endpoint API
             const res = await fetch(`/api/get/${sessionId}?t=${new Date().getTime()}`);
             if (res.ok) {
                 const data = await res.json();
@@ -171,9 +186,7 @@
 
                 sessionStorage.clear(); 
                 
-                // Buka Link Asli
                 realLinkTab.location.replace(data.url);
-                // Redirect halaman ini ke iklan 
                 window.location.replace(unlockAdDest);
                 
             } else {
