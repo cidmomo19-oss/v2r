@@ -56,9 +56,8 @@
 </div>
 
 <script>
-    // Nangkep ID KODE dari URL Parameter (?id=ABCDEF) dari _worker.js
-    const urlParams = new URLSearchParams(window.location.search);
-    const sessionId = urlParams.get('id');
+    // Ambil ID dari path URL langsung (contoh: /Acak12 -> Acak12)
+const sessionId = window.location.pathname.substring(1);
     
     if (!sessionId || navigator.webdriver) {
         window.location.replace('/'); // Balikin ke halaman create link kalo invalid
